@@ -11,3 +11,5 @@ config_id
 src/env.ts
 src/dev.mongodb
 map/**/*
+map/
+/src/getF.ts

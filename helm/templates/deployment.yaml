@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "obridge-lpnode.fullname" . }}
+  name: {{ include "otmoic-lpnode-graphql.fullname" . }}
   labels:
-    app: {{ include "obridge-lpnode.fullname" . }}
+    app: {{ include "otmoic-lpnode-graphql.fullname" . }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ include "obridge-lpnode.fullname" . }}
+      app: {{ include "otmoic-lpnode-graphql.fullname" . }}
   template:
     metadata:
       labels:
-        app: {{ include "obridge-lpnode.fullname" . }}
+        app: {{ include "otmoic-lpnode-graphql.fullname" . }}
     spec:
       containers:
-      - name: {{ include "obridge-lpnode.fullname" . }}
+      - name: {{ include "otmoic-lpnode-graphql.fullname" . }}
         image: {{ .Values.image.name }}
         ports:
-          - containerPort: 18081
+          - containerPort: 18086
         env:
           - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
             value: "obridge-lpnode-db-redis-master"
@@ -27,14 +27,10 @@ spec:
               secretKeyRef:
                 name: obridge-lpnode-db-redis
                 key: redis-password
-          - name: NODE_ENV
-            value: "{{ .Values.lpconfig.market_env }}"
           - name: LP_NODE_DATA_MONGO_URL
             value: "obridge-lpnode-db-mongodb"
           - name: LP_MARKET_SERVICE_URL
             value: "obridge-lpnode-market"
           - name: KUBERNETES_SERVICE_PORT_HTTPS
             value: 1000
-
-# ENV LP_NODE_DATA_MONGO_URL=mongodb://root:123456@192.168.50.201:27017/lp_store?authSource=admin
 
