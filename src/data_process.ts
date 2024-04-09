@@ -4,7 +4,7 @@ import { logger } from "./sys_lib/logger";
 const readyList = ["_eq", "_neq", "_gt", "_gte", "_lt", "_lte", "_in", "_nin"];
 const replaceOp = (op: string) => {
   if (!readyList.includes(op)) {
-    throw new Error(`暂时还没有实现的操作方法${op}`);
+    throw new Error(`operation method not yet implemented ${op}`);
   }
   op = op.replace("_neq", "$ne");
   op = op.replace("_", "$");
@@ -202,7 +202,7 @@ class DataProcess {
   public _formatResult(result: any[]) {
     let ret: any[] = [];
     result.forEach((row) => {
-      // 处理max 结果集
+      // handle max result set
       const replaceField = (type: string) => {
         Object.keys(row).forEach((key) => {
           let keyCopy: any = key;

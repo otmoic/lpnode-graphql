@@ -37,7 +37,7 @@ const preData = function () {
           }
         });
       } else {
-        // console.warn(filePath, "不是一个文件");
+        // console.warn(filePath, "not a file");
       }
     }
   }

@@ -1,10 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 const envFile = fs.existsSync(path.join(__dirname, "env.js"));
+const _ = require("lodash")
 if (envFile) {
   require("./env.js");
 } else {
-  console.log("env File 不存在");
+  console.log("env file does not exist");
 }
 
 import { ApolloServer } from "@apollo/server";
@@ -16,8 +17,8 @@ import http from "http";
 import { json } from "body-parser";
 import cors from "cors";
 
-import { appEnv } from "./app_env"; // 这个要在最前边
-appEnv.initConfig(); // 初始化基本配置
+import { appEnv } from "./app_env"; // this should be at the very beginning
+appEnv.initConfig(); // initialize basic configuration
 
 import { schemas_resolvers, schemas_typeDefs } from "./schemas";
 
@@ -40,7 +41,7 @@ const server = new ApolloServer({
 //  2. installs your ApolloServer instance as middleware
 //  3. prepares your app to handle incoming requests
 async function main() {
-  Mdb.getInstance().getMongoDb("main"); // 初始化数据库链接
+  Mdb.getInstance().getMongoDb("main"); // initialize database connection
   Mdb.getInstance().getMongoDb("business");
   const wait = 2;
   let connected = 0;
@@ -59,7 +60,7 @@ async function main() {
     return new Promise((resolve) => {
       const interval = setInterval(() => {
         if (connected === wait) {
-          logger.debug(`全部链接成功了....`);
+          logger.debug(`all connections successful....`);
           resolve(true);
           if (connected) {
             clearInterval(interval);
@@ -69,12 +70,17 @@ async function main() {
     });
   })();
   logger.debug(`database connection ready...`, "..");
-  logger.debug(`启动server`);
+  logger.debug(`start server`);
   await server.start();
+  const domainHttps = `https://${_.get(process.env, "WEB_DOMAIN", "")}`
+  const domainHttp = `http://${_.get(process.env, "WEB_DOMAIN", "")}`
   app.use(
     "/graphql",
     cors<cors.CorsRequest>({
-      origin: ["https://localhost", "http://localhost"],
+      origin: [
+        domainHttps,
+        domainHttp,
+      ],
     }),
     json(),
     expressMiddleware(server)
@@ -82,8 +88,11 @@ async function main() {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
   );
+  console.log("cors")
+  console.log(domainHttps)
+  console.log(domainHttp)
   console.log(`🚀 Server ready at http://localhost:4000/graphql`);
 }
 main().then(() => {
-  console.log(`程序成功启动`);
+  console.log(`program successfully started`);
 });

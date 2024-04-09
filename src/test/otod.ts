@@ -73,7 +73,11 @@ const data = {
 };
 import * as _ from "lodash";
 
-import { jsonToSchema } from "@walmartlabs/json-to-simple-graphql-schema/lib";
+// import { jsonToSchema } from "@walmartlabs/json-to-simple-graphql-schema/lib";
 
-const schema = jsonToSchema({ jsonInput: JSON.stringify(data) });
-console.log(schema.value);
+// const schema = jsonToSchema({ jsonInput: JSON.stringify(data) });
+// console.log(schema.value);
+
+_.forEach(data, function (value, key) {
+  console.log(key);
+});

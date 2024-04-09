@@ -22,33 +22,33 @@ setInterval(() => {
       }
       const filePath = path.join(logPath, item);
       if (item.indexOf(".out") === -1 && item.indexOf(".err") === -1) {
-        log.warn(`不是预期的想要删除的日志文件`, filePath); // 只删除结尾是 .out .err 的文件
+        log.warn(`not the intended log file to delete`, filePath);
         return;
       }
       if (filePath.indexOf(logPath) === -1) {
-        // 必须在定义的log目录下
-        log.warn(`预期目录之外的内容`, filePath);
+        log.warn(`content outside expected directory`, filePath);
         return;
       }
 
       const status = fs.statSync(filePath);
       if (status.isFile()) {
-        // 必须是文件
         if (filePath.indexOf("/log/") !== -1) {
-          // 必须在一个log目录下
           const passBy = new Date().getTime() - status.atimeMs;
           if (passBy > 1000 * 60 * 60 * 24 * 3) {
-            // 时间大于3天
-            log.debug("过去三天内没有更新", "Delete log file ", filePath);
+            log.debug(
+              "no updates in the past three days",
+              "Delete log file ",
+              filePath
+            );
             fs.unlinkSync(filePath);
           }
         }
       }
     });
   } catch (e) {
-    log.error(`删除文件发生了错误`, e);
+    log.error(`an error occurred while deleting the file`, e);
   }
-}, 1000 * 60 * 60 * 6); // 六小时执行一次就可以了
+}, 1000 * 60 * 60 * 6);
 
 function logToSendMessage(logObject: ILogObject) {
   if (!fs.existsSync(logPath)) {

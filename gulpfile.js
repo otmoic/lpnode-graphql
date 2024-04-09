@@ -38,5 +38,5 @@ function buildTs() {
 }
 
 gulp.task('default', gulp.series(copyJs, copyJson, copyConfig, buildTs), function() {
-  console.log('task 完成');
+  console.log('task complete');
 });
